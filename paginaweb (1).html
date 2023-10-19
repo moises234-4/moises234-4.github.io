@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Estilos generales del formulario */
+        .form-login {
+            width: 300px;
+            margin: 0 auto;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Estilos del título del formulario */
+        .form-login h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* Estilos de los campos de entrada */
+        .form-login input {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        /* Estilos del botón de enviar */
+        .form-login button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #0099ff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Estilos del botón de enviar al pasar el ratón */
+        .form-login button:hover {
+            background-color: #0077cc;
+        }
+
+        /* Estilos del encabezado */
+        .header {
+            background-color: #0099ff;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Encabezado con el nombre del sistema -->
+    <div class="header">
+        <h1>System Park</h1>
+    </div>
+
+    <!-- Formulario de registro -->
+    <div class="form-login" id="registroAdmin">
+        <h2>Registro de Administrador</h2>
+        <form>
+            <input type="text" id="nombreUsuario" name="nombreUsuario" placeholder="Nombre de Usuario" required>
+            <input type="password" id="contraseña" name="contraseña" placeholder="Contraseña" required>
+            <input type="email" id="correoElectronico" name="correoElectronico" placeholder="Correo Electrónico" required>
+            <input type="tel" id="numeroTelefono" name="numeroTelefono" placeholder="Número de Teléfono" required>
+            <button type="button" onclick="registrarUsuario()">Registrar</button>
+        </form>
+        <p><a href="#" onclick="mostrarRecuperarContraseñaForm()">Recuperar Contraseña</a></p>
+    </div>
+
+    <!-- Formulario de inicio de sesión (inicialmente oculto) -->
+    <div class="form-login" id="loginForm" style="display: none;">
+        <h2>Iniciar sesión</h2>
+        <form>
+            <input type="email" id="correoInicioSesion" name="correoInicioSesion" placeholder="Correo Electrónico" required>
+            <input type="password" id="contraseñaInicioSesion" name="contraseñaInicioSesion" placeholder="Contraseña" required>
+            <button type="button" onclick="iniciarSesion()">Iniciar Sesión</button>
+        </form>
+    </div>
+
+    <!-- Menú de bienvenida (inicialmente oculto) -->
+    <div class="form-login" id="bienvenidoMenu" style="display: none;">
+        <h2>Bienvenido <span id="nombreUsuarioBienvenida"></span></h2>
+        <button type="button" onclick="mostrarRegistroVehiculosForm()">Registrar Vehículo</button>
+    </div>
+
+    <!-- Formulario de registro de vehículos (inicialmente oculto) -->
+    <div class="form-login" id="registroVehiculosForm" style="display: none;">
+        <h2>Registrar Vehículo</h2>
+        <form>
+            <label for="modeloVehiculo">Modelo de Vehículo:</label>
+            <input type="text" id="modeloVehiculo" name="modeloVehiculo" required>
+
+            <label for="placas">Placas:</label>
+            <input type="text" id="placas" name="placas" required>
+
+            <label for="horaEntrada">Hora de Entrada:</label>
+            <input type="text" id="horaEntrada" name="horaEntrada" required>
+
+            <button type="button" onclick="registrarVehiculo()">Registrar Vehículo</button>
+        </form>
+
+        <!-- Aquí se muestra la lista de vehículos registrados -->
+        <h3>Vehículos Registrados</h3>
+        <table id="registroVehiculos">
+            <thead>
+                <tr>
+                    <th>Modelo de Vehículo</th>
+                    <th>Placas</th>
+                    <th>Hora de Entrada</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Formulario de recuperación de contraseña (inicialmente oculto) -->
+    <div class="form-login" id="recuperarContraseñaForm" style="display: none;">
+        <h2>Recuperar Contraseña</h2>
+        <form>
+            <input type="email" id="correoRecuperar" name="correoRecuperar" placeholder="Correo Electrónico" required>
+            <input type="text" id="nombreUsuarioRecuperar" name="nombreUsuarioRecuperar" placeholder="Nombre de Usuario" required>
+            <button type="button" onclick="enviarContraseña()">Recuperar Contraseña</button>
+        </form>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Función para registrar usuario
+        function registrarUsuario() {
+            var nombreUsuario = document.getElementById("nombreUsuario").value;
+            var contrasena = document.getElementById("contraseña").value;
+            var correoElectronico = document.getElementById("correoElectronico").value;
+
+            if (nombreUsuario === "" || contrasena === "" || correoElectronico === "") {
+                alert("Por favor, complete todos los campos.");
+                return;
+            }
+
+            // Almacenar los datos de registro en localStorage
+            localStorage.setItem("nombreUsuario", nombreUsuario);
+            localStorage.setItem("contrasena", contrasena);
+            localStorage.setItem("correoElectronico", correoElectronico);
+
+            // Ocultar el formulario de registro y mostrar el menú de bienvenida
+            document.getElementById("registroAdmin").style.display = "none";
+            document.getElementById("bienvenidoMenu").style.display = "block";
+            document.getElementById("nombreUsuarioBienvenida").textContent = nombreUsuario;
+        }
+
+        // Función para mostrar el menú de recuperación de contraseña
+        function mostrarRecuperarContraseñaForm() {
+            document.getElementById("registroAdmin").style.display = "none";
+            document.getElementById("recuperarContraseñaForm").style.display = "block";
+        }
+
+        // Función para enviar la contraseña al correo electrónico (simulado)
+        function enviarContraseña() {
+            var correoRecuperar = document.getElementById("correoRecuperar").value;
+            var nombreUsuarioRecuperar = document.getElementById("nombreUsuarioRecuperar").value;
+
+            // Simulamos el envío de un correo electrónico
+            alert("Se ha enviado la contraseña al correo electrónico proporcionado.");
+
+            // Restablecemos los campos
+            document.getElementById("correoRecuperar").value = "";
+            document.getElementById("nombreUsuarioRecuperar").value = "";
+
+            // Mostramos nuevamente el formulario de registro
+            document.getElementById("recuperarContraseñaForm").style.display = "none";
+            document.getElementById("registroAdmin").style.display = "block";
+        }
+
+        // Función para iniciar sesión
+        function iniciarSesion() {
+            var correoInicioSesion = document.getElementById("correoInicioSesion").value;
+            var contrasenaInicioSesion = document.getElementById("contraseñaInicioSesion").value;
+
+            var registroCorreoElectronico = localStorage.getItem("correoElectronico");
+            var registroContrasena = localStorage.getItem("contrasena");
+
+            if (correoInicioSesion === registroCorreoElectronico && contrasenaInicioSesion === registroContrasena) {
+                // Redirigir al usuario al menú de bienvenida
+                document.getElementById("loginForm").style.display = "none";
+                document.getElementById("bienvenidoMenu").style.display = "block";
+                document.getElementById("nombreUsuarioBienvenida").textContent = correoInicioSesion;
+            } else {
+                alert("Credenciales incorrectas. Por favor, intente de nuevo.");
+            }
+        }
+
+        // Función para mostrar el formulario de registro de vehículos
+        function mostrarRegistroVehiculosForm() {
+            document.getElementById("bienvenidoMenu").style.display = "none";
+            document.getElementById("registroVehiculosForm").style.display = "block";
+        }
+
+        // Función para registrar vehículos
+        function registrarVehiculo() {
+            var modeloVehiculo = document.getElementById("modeloVehiculo").value;
+            var placas = document.getElementById("placas").value;
+            var horaEntrada = document.getElementById("horaEntrada").value;
+
+            var table = document.getElementById("registroVehiculos").getElementsByTagName('tbody')[0];
+            var newRow = table.insertRow(table.rows.length);
+            var cell1 = newRow.insertCell(0);
+            var cell2 = newRow.insertCell(1);
+            var cell3 = newRow.insertCell(2);
+
+            cell1.innerHTML = modeloVehiculo;
+            cell2.innerHTML = placas;
+            cell3.innerHTML = horaEntrada;
+
+            document.getElementById("modeloVehiculo").value = "";
+            document.getElementById("placas").value = "";
+            document.getElementById("horaEntrada").value = "";
+        }
+
+        // Resto del código sin cambios
+        // ...
+
+        // Llama a verificarInicioSesion cuando la página se carga
+        window.onload = verificarInicioSesion;
+    </script>
+</body>
+</html>
